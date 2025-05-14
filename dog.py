@@ -7,9 +7,6 @@ from crewai import LLM
 load_dotenv()  # Isso carrega as variáveis do .env para os.environ
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-print(GOOGLE_API_KEY)
-
-
 
 class Dog(BaseModel):
     name: str
