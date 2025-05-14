@@ -14,14 +14,7 @@ llm = LLM(
     temperature=0.7,
     api_key=GOOGLE_API_KEY,
 )
-# response = llm.call(
-#     "Analyze the following messages and return the name, age, and breed. "
-#     "Meet Kona! She is 3 years old and is a black german shepherd."
-# )
-# print(response)
 
-
-# llm = "gemini/gemini-2.0-flash"
 
 #Teste de conexão com o Google Generative AI
 # llm = ChatGoogleGenerativeAI(
@@ -66,14 +59,11 @@ tarefa_redacao = Task(
 equipe = Crew(
     agents=[pesquisador, escritor],
     tasks=[tarefa_pesquisa, tarefa_redacao],
-    #process=Process.hierarchical,
     process=Process.sequential,
-    manager_llm=llm,
-    llm=llm,
-    memory=True,
     llm_provider="google",
     verbose=True,
 )
+
 
 # Execução
 resultado = equipe.kickoff()

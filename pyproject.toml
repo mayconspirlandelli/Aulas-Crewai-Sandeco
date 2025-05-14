@@ -7,4 +7,6 @@ requires-python = ">=3.13"
 dependencies = [
     "crewai>=0.119.0",
     "crewai-tools>=0.44.0",
+    "dotenv>=0.9.9",
+    "python-dotenv>=1.1.0",
 ]

@@ -35,3 +35,7 @@ from crewai import Agent
 
 # Instalar o Tools
 uv add crewai-tools
+
+# Instalar dotenv
+uv add python-dotenv
+
