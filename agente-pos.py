@@ -8,7 +8,8 @@ from pydantic import BaseModel
 from crewai_tools import FirecrawlSearchTool
 
 # Página de exemplo (troque pela URL que desejar)
-url = "https://anaformigadoces.goomer.app/menu"
+url = "https://escoladepos.ufg.br/cursos/atendimento-de-criancas-e-adolescentes-vitimas-ou-testemunhas-de-violencia/"
+#url = "https://escoladepos.ufg.br/cursos/banco-de-dados-com-big-data/"
 
 # Carregar variáveis de ambiente do arquivo .env
 load_dotenv()  # Isso carrega as variáveis do .env para os.environ
@@ -16,10 +17,6 @@ load_dotenv()  # Isso carrega as variáveis do .env para os.environ
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 FIRECRAWL_API_KEY = os.getenv("FIRECRAWL_API_KEY")
 
-# class Produtos(BaseModel):
-#     nome: str
-#     descricao: str
-#     preco: str
 
 llm = LLM(
     model="gemini/gemini-2.0-flash",
@@ -30,17 +27,12 @@ llm = LLM(
 
 # Ferramenta para raspagem de site
 scraper_tool = ScrapeWebsiteTool()
-# text = scraper_tool.run()
-# print(text)
 
-
-# firecraw_tool = FirecrawlSearchTool(api_key=FIRECRAWL_API_KEY,
-#                                      query='Quais são os produtos?')
 
 # Agente que usa a ferramenta de scraping
 agente_extracao = Agent(
-    role="Agente de Coleta de Produtos de Sites",
-    goal="Extrair lista de produtos, descrições e preços de um site de e-commerce",
+    role="Agente de Coleta de Informações de Sites",
+    goal="Extrair informacoes dos curso de pós-graduação da UFG. Voce deve caputra informaçoes sobre o curso, como nome, descrição, data de início e valor.",
     backstory="Especialista em web scraping de lojas online e coleta de informações relevantes.",
     verbose=True,
     memory=True,
@@ -52,11 +44,16 @@ agente_extracao = Agent(
 # Tarefa que instrui o agente a usar a ferramenta
 extrair_informacoes_site = Task(
     description=f"""
-    Acesse o site {url} e extraia uma lista estruturada de produtos disponíveis.
-    Para cada produto, colete:
-    - Nome do produto
+    Acesse o site {url} e extraia informaçoes relativas ao curso de pós-graduação da UFG.
+    Para cada curso, colete:
+    - Nome do curso
     - Descrição resumida
-    - Preço
+    - Carga horário do curso
+    - Curso é on-line, presencial ou híbrido
+    - Informações sobre o curso
+    - Edital está diponível ou não.
+    - Data de início do curso
+    - Qual valor da mensalidade do curso.
 
     Formate a saída como uma lista em JSON.
     """,
@@ -78,11 +75,16 @@ agente_formatador_json = Agent(
 formatar_json = Task(
     description=f"""
     Formate a saída como uma lista em JSON com os seguintes campos para cada produto coletado:
-    - Nome do produto
-    - Descrição resumida
-    - Preço
+    - Nome do curso,
+    - Descrição resumida,
+    - Carga horário do curso,
+    - Curso é on-line, presencial ou híbrido,
+    - Informações sobre o curso,
+    - Edital está diponível ou não,
+    - Data de início do curso,
+    - Qual valor da mensalidade do curso.
     """,
-    expected_output="Uma lista JSON contendo nome, descrição e preço de cada produto.",
+    expected_output="Uma lista JSON contendo todos as informações coletadas do site.",
     tools=[scraper_tool],
     agent=agente_formatador_json
 )
