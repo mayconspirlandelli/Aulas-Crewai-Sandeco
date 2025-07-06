@@ -1,13 +1,13 @@
-# Aulas-Crewai-Sandeco
+## Aulas-Crewai-Sandeco
 Aulas Disciplina Agentes Inteligentes do prof. Sandeco da Especialização Agentes Inteligentes Pós UFG
 
-# INstalação dos Pacotes
+## INstalação dos Pacotes
 pip install python-dotenv
 pip install -qU google-generativeai langchain-google-genai
 pip install -qU crewai
 pip install -qU crewai-tools
 
-# Agora vamos usar documetncao do CrewAI
+## Agora vamos usar documetncao do CrewAI
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 https://docs.crewai.com/installation
@@ -18,24 +18,31 @@ https://docs.crewai.com/installation
 # Para MacOS
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Install CrewAI
+## Install CrewAI
 uv tool install crewai
 
-# Verificar instalação 
+## Verificar instalação 
 uv tool list
 
-# Crie a pasta do projeto. Dentro da pasta voce digita o comando. O projeto é inicializado com nome da pasta.
+## Crie a pasta do projeto. Dentro da pasta voce digita o comando. O projeto é inicializado com nome da pasta.
 uv init 
 
-# Vamos adicionar o crewai aqui no projeto. Ele criva o ambiente virutal do python ".venv" de forma automática. Crai a Toml e Lock
+## Vamos adicionar o crewai aqui no projeto. Ele criva o ambiente virutal do python ".venv" de forma automática. Crai a Toml e Lock
 uv add crewai
 
-# No arquivo "main.py" apague tudo e crie com novo. 
+## No arquivo "main.py" apague tudo e crie com novo. 
 from crewai import Agent
 
-# Instalar o Tools
+## Instalar o Tools
 uv add crewai-tools
 
-# Instalar dotenv
+## Instalar dotenv 
 uv add python-dotenv
+
+## Se o projeto já exsiste
+uv venv   # cria o ambiente virtual .venv
+source .venv/bin/activate  # Linux/macOS
+
+## Instale as dependencias
+uv pip install -r requirements.txt
 
