@@ -1,19 +1,10 @@
-from crewai import Agent, Task, Crew, Process, LLM
+from crewai import Agent, Task, Crew, Process
 from math_tool import MultiplicationTool
-from dotenv import load_dotenv
-import os
+#from llm_helper import LLMHelper
+from util.llm_helper import LLMHelper
 
-# Carregar variáveis de ambiente
-load_dotenv()
-
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-
-# Definir o modelo de linguagem
-llm = LLM(
-    model="gemini/gemini-2.0-flash",
-    temperature=0,
-    api_key=GOOGLE_API_KEY,
-)
+# Obter instância da LLM com configuração padrão
+llm = LLMHelper.get_llm()
 
 # Criando a instância da ferramenta
 multiplication_tool = MultiplicationTool()

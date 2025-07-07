@@ -2,15 +2,18 @@ from crewai import Agent, Task, Crew, Process
 from crewai_tools import SerperDevTool
 from graph_tool import CustomGraphTool
 from pdf_creator import PDFCreationTool  # Supondo que a ferramenta foi implementada como descrito
-from util.MyLLM import MyLLM
 from util.llm_helper import LLMHelper
+import os
 
 # Obter instância da LLM com configuração padrão
 llm = LLMHelper.get_llm()
 
+SERPER_API_KEY=os.getenv("SERPER_API_KEY")
+
 # Ferramenta para pesquisar informações sobre matriz energética usando o SerperDevTool
 serper_tool = SerperDevTool()
 serper_tool.n_results = 50
+
 
 # Agente responsável por pesquisar dados sobre matriz energética mundial usando o SerperDevTool
 research_agent = Agent(
@@ -19,6 +22,7 @@ research_agent = Agent(
     de uso para as seguintes fontes: Petróleo e derivados, Carvão, Gás natural, Hidráulica, Nuclear, Biomassa e Outras renováveis.""",
     backstory="Especialista em pesquisa de dados energéticos e fontes de energia sustentáveis.",
     tools=[serper_tool],
+    llm=llm,
     allow_delegation=False,
     verbose=True
 )
@@ -30,6 +34,7 @@ graph_agent = Agent(
     backstory="""Você é especialista em visualização de dados e transforma dados 
     numéricos em gráficos claros e informativos.""",
     tools=[CustomGraphTool()],  # Integrando a ferramenta de criação de gráficos
+    llm=llm,
     allow_delegation=False,
     verbose=True
 )
@@ -40,6 +45,7 @@ writer_agent = Agent(
     goal="Escrever um relatório explicativo sobre os dados energéticos e criar um PDF com as informações e o gráfico.",
     backstory="Você é um especialista em redação de relatórios sobre temas complexos, especialmente relacionados a dados energéticos.",
     tools=[PDFCreationTool()],
+    llm=llm,
     allow_delegation=False,
     verbose=True
 )
@@ -61,6 +67,7 @@ energy_research_task = Task(
         "Outras Renováveis": <valor>%
     }""",
     tools=[serper_tool],  # Ferramenta de pesquisa usada na tarefa
+    llm=llm,
     agent=research_agent  # Associando o agente de pesquisa de matriz energética à tarefa
 )
 
@@ -72,6 +79,7 @@ graph_creation_task = Task(
     expected_output="Um gráfico de pizza salvo como arquivo PNG que mostra a distribuição percentual da matriz energética em 2025.",
     tools=[CustomGraphTool()],  # Ferramenta usada na tarefa para gerar o gráfico
     context=[energy_research_task],
+    llm=llm,
     agent=graph_agent  # Associando o agente de criação de gráficos à tarefa
 )
 
@@ -82,6 +90,7 @@ report_creation_task = Task(
     para criar um PDF com o título 'Relatório de Consumo Energético 2025', incluindo o texto explicativo e o gráfico gerado.""",
     expected_output="Um arquivo PDF contendo o relatório explicativo e o gráfico da matriz energética, salvo com o nome 'Relatorio_Consumo_Energetico_2025.pdf'.",
     tools=[PDFCreationTool()],
+    llm=llm,
     context=[energy_research_task, graph_creation_task],
     agent=writer_agent  # Associando o agente escritor à tarefa de criação do relatório
 )

@@ -46,3 +46,5 @@ source .venv/bin/activate  # Linux/macOS
 ## Instale as dependencias
 uv pip install -r requirements.txt
 
+## É necessário installart 
+pip install reportlab
