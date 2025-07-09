@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from crewai import LLM
 
-os.environ["OPENAI_API_KEY"] ="sk-proj-1111"
+#os.environ["OPENAI_API_KEY"] ="sk-proj-1111"
 
 class LLMHelper:
     @staticmethod

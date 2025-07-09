@@ -27,11 +27,12 @@ def render_upload_page():
                 f.write(uploaded_file.getbuffer())
 
             st.success(f"Upload Realizado com sucesso: {uploaded_file.name}")
-
+                
             st.info("Resumindo PDF com agentes")
 
             # Loader durante a execução da tarefa
             with st.spinner('Executando tarefas do Crew...'):
+                
                 crew = CrewPDFResumo(temp_file_path)
                 time.sleep(1)  # Simulando um pequeno atraso (remova na produção)
                 resultado = crew.kickoff()  # Certifique-se de que esta é a tarefa demorada

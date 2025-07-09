@@ -5,7 +5,6 @@ from paginas.welcome import render_welcome
 from paginas.post import render_post_page
 from paginas.upload_pdf import render_upload_page
 
-
 st.sidebar.image(
     Image.LOGO,
     use_container_width=True,
@@ -16,7 +15,7 @@ st.sidebar.image(
 with st.sidebar:
     selected = option_menu(
         menu_title="Agentic Platform",  # Título do menu
-        options=["Home", "Post Agent", "Summary PDF"],  # Opções do menu
+        options=["Home", "PostAgent", "SummaryPDF"],  # Opções do menu
         icons=['house','file-earmark-text','cloud-upload'],
         menu_icon='robot',
         default_index=0,
@@ -24,19 +23,19 @@ with st.sidebar:
     )
 
 st.sidebar.image(
-    Image.POWERED, 
+    Image.POWERED,
     use_container_width=True,
     width=200
 )
 
-
 # Conteúdo baseado na opção selecionada
 if selected == "Home":
     render_welcome()
+    #render_upload_page()
 
-elif selected == "Post Agent":
+elif selected == "PostAgent":
     render_post_page()
 
-elif selected == "Summary PDF":
+elif selected == "SummaryPDF":
     render_upload_page()
 

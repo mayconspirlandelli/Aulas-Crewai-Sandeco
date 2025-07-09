@@ -2,15 +2,16 @@ import os
 from crewai import Agent, Task, Crew, Process
 from crewai_tools import SerperDevTool
 from dotenv import load_dotenv
-
-load_dotenv()
+from util.llm_helper import LLMHelper
 
 class CrewPostagem:
 
     def __init__(self):
         
         self.search_tool = SerperDevTool()
-        self.llm = "gpt-4o-mini"
+        # Obter instância da LLM com configuração padrão
+        self.llm = LLMHelper.get_llm()
+        #self.llm = "gpt-4o-mini"
         
         self.crew = self._criar_crew()
 
@@ -21,6 +22,7 @@ class CrewPostagem:
             role='Pesquisador',
             goal='Encontrar informações relevantes sobre {topic}',
             verbose=True,
+            llm=self.llm,
             memory=True,
             backstory=(
                 'Você é um pesquisador especializado em descobrir informações'
@@ -34,6 +36,7 @@ class CrewPostagem:
             goal='Criar uma postagem convincente sobre {topic}',
             verbose=True,
             memory=True,
+            llm=self.llm,
             backstory=(
                 'Você é um redator experiente que transforma informações em'
                 ' conteúdos interessantes e informativos.'
@@ -45,6 +48,7 @@ class CrewPostagem:
             goal='Revisar e melhorar a postagem sobre {topic}',
             verbose=True,
             memory=True,
+            llm=self.llm,
             backstory=(
                 'Você é um revisor detalhista, especializado em ajustar o tom,'
                 ' a clareza e a gramática de textos.'
@@ -59,6 +63,7 @@ class CrewPostagem:
             ),
             expected_output='Um resumo detalhado sobre {topic}.',
             tools=[self.search_tool],
+            llm=self.llm,
             agent=pesquisador,
         )
 
@@ -69,6 +74,7 @@ class CrewPostagem:
             ),
             expected_output='Uma postagem completa sobre {topic} com 3 parágrafos.',
             agent=escritor,
+            llm=self.llm,
             context=[pesquisa_tarefa]
         )
 
@@ -78,6 +84,7 @@ class CrewPostagem:
             ),
             expected_output='Uma postagem revisada e otimizada.',
             agent=revisor,
+            llm=self.llm,
             context=[escrita_tarefa]
         )
 
@@ -90,7 +97,5 @@ class CrewPostagem:
 
     def kickoff(self, inputs):
         # Executa o Crew com o tópico fornecido
-        
-        resposta = self.crew.kickoff(inputs=inputs) 
-    
+        resposta = self.crew.kickoff(inputs=inputs)     
         return resposta.raw
