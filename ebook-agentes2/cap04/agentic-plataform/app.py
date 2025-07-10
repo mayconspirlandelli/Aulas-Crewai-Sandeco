@@ -16,8 +16,8 @@ st.sidebar.image(
 with st.sidebar:
     selected = option_menu(
         menu_title="Agentic Platform",  # Título do menu
-        options=["Home", "PostAgent", "SummaryPDF", "AboutPage"],  # Opções do menu
-        icons=['house','file-earmark-text','cloud-upload'],
+        options=["Home", "PostAgent", "SummaryPDF", "AboutPage", "Settings", "Translate"],  # Opções do menu
+        icons=['house','file-earmark-text','cloud-upload', "info", "gear", "globe"]],
         menu_icon='robot',
         default_index=0,
         orientation="vertical" #teste com "horizontal"
@@ -44,4 +44,9 @@ elif selected == "SummaryPDF":
 elif selected == "AboutPage":
     render_about_page()
 
+elif selected == "Settings":
+    render_settings_page()
+
+elif selected == "Translate":
+    render_translate_page()
 
