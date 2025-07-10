@@ -1,4 +1,5 @@
 import streamlit as st
+from crews.translate_crew import CrewTranslate
 
 def render_translate_page():
     st.title("CrewTranslate: Tradução de Textos")
@@ -25,12 +26,11 @@ def render_translate_page():
         if texto_original.strip() == "":
             st.warning("Por favor, insira um texto para traduzir.")
         else:
-            # Aqui entraria a chamada para o agente CrewTranslate
-            texto_traduzido = simular_traducao(texto_original, idiomas[idioma_destino])
-
-            st.subheader("Texto Traduzido:")
-            st.success(texto_traduzido)
-
-# Simulador de tradução (temporário — substitua depois pelo agente CrewAI)
-def simular_traducao(texto, idioma):
-    return f"[Tradução simulada para {idioma.upper()}] {texto}"
+            
+            crew_translate = CrewTranslate()
+            traducao = crew_translate.kickoff(inputs={
+                    'texto_original': texto_original,
+                    'idioma_destino': idioma_destino
+            })
+        st.subheader("Texto Traduzido:")
+        st.success(traducao)
