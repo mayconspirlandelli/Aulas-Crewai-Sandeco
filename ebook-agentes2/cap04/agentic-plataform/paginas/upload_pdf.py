@@ -16,11 +16,21 @@ def render_upload_page():
     # Instruções para o usuário
     st.write("Faça upload de um arquivo PDF para resumir seu conteúdo.")
 
+    # Controle deslizante para limitar caracteres
+    max_chars = st.slider(
+        "Limite de caracteres do resumo",
+        min_value=100,
+        max_value=2000,
+        value=600,
+        step=50
+    )
+
     # Elemento de upload de arquivo
     uploaded_file = st.file_uploader("Escolha um arquivo PDF", type="pdf")
 
     if uploaded_file is not None:
         try:
+            
             # Salvando o arquivo no diretório temporário
             temp_file_path = os.path.join(TEMP_DIR, uploaded_file.name)
             with open(temp_file_path, "wb") as f:
@@ -35,9 +45,13 @@ def render_upload_page():
                 
                 crew = CrewPDFResumo(temp_file_path)
                 time.sleep(1)  # Simulando um pequeno atraso (remova na produção)
-                resultado = crew.kickoff()  # Certifique-se de que esta é a tarefa demorada
+                resumo_completo = crew.kickoff() # Certifique-se de que esta é a tarefa demorada
+                #resultado = crew.kickoff()  
 
-            st.text_area("Resumo via agentes:", resultado, height=300)
+                # Ajustar o texto com base no limite
+                resumo_cortado = resumo_completo[:max_chars] + "..." if len(resumo_completo) > max_chars else resumo_completo
+
+            st.text_area("Resumo via agentes:", resumo_cortado, height=300)
 
         except Exception as e:
             st.error(f"Erro ao processar o arquivo: {e}")

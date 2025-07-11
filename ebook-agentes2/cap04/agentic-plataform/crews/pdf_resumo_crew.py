@@ -4,19 +4,15 @@ from crewai_tools import PDFSearchTool
 from dotenv import load_dotenv
 from util.llm_helper import LLMHelper
 
-#load_dotenv()
-
 class CrewPDFResumo:
 
     def __init__(self, pdf_path):
         self.llm = LLMHelper.get_llm()  # Obter instância da LLM com configuração padrão
         #self.pdf_tool = PDFSearchTool(pdf_path)  # Tool nativa do CrewAI para leitura de PDF
 
+        # Para ler PDF usando Gemini.
         self.pdf_tool = PDFSearchTool(
             pdf_path,
-
-
-            
             config=dict(
                 llm=dict(
                     provider="google", # or google, openai, anthropic, llama2, ...
@@ -39,9 +35,6 @@ class CrewPDFResumo:
                 ),
             )
         )
-
-
-
         self.crew = self._criar_crew()
 
     def _criar_crew(self):
@@ -52,20 +45,28 @@ class CrewPDFResumo:
             verbose=True,
             llm=self.llm,
             memory=True,
-            backstory='''Você é um especialista em 
-                        sintetizar informações de documentos extensos. 
-                        Seu objetivo é identificar os pontos principais e 
-                        entregar um resumo conciso e útil.''',
+            # backstory='''Você é um especialista em 
+            #             sintetizar informações de documentos extensos. 
+            #             Seu objetivo é identificar os pontos principais e 
+            #             entregar um resumo conciso e útil.''',
+            backstory="""
+            Voce é especialista em resmuir atas de reunião. 
+            Nesta ata voce deve identficar quais sao os projetos, eventos, extensão e pesquisa.
+            """,         
             tools=[self.pdf_tool]  # Associando a tool de leitura de PDF ao agente
         )
 
         # Tarefa de resumo
         resumo_tarefa = Task(
-            description='''Leia o conteúdo do PDF fornecido 
-                            usando a tool integrada. 
-                            Produza um resumo objetivo, 
-                            destacando os principais pontos 
-                            e ideias essenciais.''',
+            # description='''Leia o conteúdo do PDF fornecido 
+            #                 usando a tool integrada. 
+            #                 Produza um resumo objetivo, 
+            #                 destacando os principais pontos 
+            #                 e ideias essenciais.''',
+            description="""
+                Leia o conteduo do PDF fornecido usando a tool integrada. 
+                Produza uma resumo objetivo destacando quais sao os projetos, eventos, extensão e pesquisa.
+            """,
             expected_output='''Um resumo claro e objetivo 
                         do conteúdo do PDF.''',
             llm=self.llm,

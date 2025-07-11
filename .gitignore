@@ -1,10 +1,12 @@
+# Ignorar arquivos específicos
+db/chroma.sqlite3
+db/chroma*
+chroma.sqlite3
+
 # Ignorar arquivos da pasta db/
 db/
 db/*
 
-# Ignorar arquivos específicos
-db/chroma.sqlite3
-chroma.sqlite3
 
 # Ignorar ChromaDB geral
 chroma/
