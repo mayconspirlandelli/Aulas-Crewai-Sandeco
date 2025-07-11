@@ -8,6 +8,7 @@ from paginas.about_page import render_about_page
 from paginas.settings import render_settings_page
 from paginas.translate import render_translate_page
 from paginas.feedback import render_feedback_page
+from paginas.search import render_search_page
 
 st.sidebar.image(
     Image.LOGO,
@@ -19,8 +20,10 @@ st.sidebar.image(
 with st.sidebar:
     selected = option_menu(
         menu_title="Agentic Platform",  # Título do menu
-        options=["Home", "PostAgent", "SummaryPDF", "AboutPage", "Settings", "Translate", "Feedback"],  # Opções do menu
-        icons=['house','file-earmark-text','cloud-upload', "info", "gear", "globe", "person-check-fill"],
+        options=["Home", "PostAgent", "SummaryPDF", "AboutPage", 
+                "Settings", "Translate", "Feedback", "Search"],  # Opções do menu
+        icons=['house','file-earmark-text','cloud-upload', "info", 
+                "gear", "globe", "person-check-fill", "search"],
         menu_icon='robot',
         default_index=0,
         orientation="vertical" #teste com "horizontal"
@@ -33,7 +36,8 @@ paginas_implementadas = {
     "SummaryPDF": render_upload_page,
     "AboutPage": render_about_page,
     "Translate": render_translate_page,
-    "Feedback": render_feedback_page
+    "Feedback": render_feedback_page,
+    "Search": render_search_page
 }
 
 # Verifica se a página está implementada

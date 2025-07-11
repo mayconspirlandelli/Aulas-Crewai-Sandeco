@@ -1,19 +1,21 @@
 from crewai import Agent, Task, Crew, Process
 from util.llm_helper import LLMHelper
 from langchain.tools import DuckDuckGoSearchRun
+import MyCustomDuckDuckGoTool
 
 
-@tool('DuckDuckGoSearch')
-def search_tool(search_query: str):
-    """Search the web for information on a given topic"""
-    return DuckDuckGoSearchRun().run(search_query)
+# @tool('DuckDuckGoSearch')
+# def search_tool(search_query: str):
+#     """Search the web for information on a given topic"""
+#     return DuckDuckGoSearchRun().run(search_query)
 
 
 class CrewSearch:
 
     def __init__(self):
         
-        self.search_tool = DuckDuckGoSearchRun()
+        #self.search_tool = DuckDuckGoSearchRun()
+        self.search_tool = MyCustomDuckDuckGoTool()
         # Obter instância da LLM com configuração padrão
         self.llm = LLMHelper.get_llm()
         self.crew = self._criar_crew()
@@ -49,7 +51,7 @@ class CrewSearch:
             llm=self.llm
         )
 
-        editor = Agent(
+        revisor = Agent(
             role = 'Editor de Conteúdo',
             goal = 'Editar um texto de LinkedIn para que o mesmo seja factualmente correto e tenha um tom informal e divertido.',
             backstory = ''''
@@ -64,7 +66,7 @@ class CrewSearch:
         )
 
         # Tarefas
-        buscar = Task(
+        buscar_tarefa = Task(
             description=
                 '''
                 1. Priorize as últimas tendências, os principais atores e as notícias mais relevantes sobre o {tema}.\n
@@ -77,8 +79,7 @@ class CrewSearch:
             expected_output='Um plano de tendências sobre {tema} com as palavras mais relevantes de SEO e as últimas notícias.'
         )
 
-        
-        escrever = Task(
+        escrever_tarefa = Task(
             description='''
                 1. Use os dados coletados de conteúdo para criar um post de LinkedIn atraente sobre o {tema}.\n
                 2. Incorpore palavras-chave de SEO de forma natural. \n
@@ -87,34 +88,24 @@ class CrewSearch:
             agent=escritor,
             tools=[self.search_tool],
             llm=self.llm,
-            context=[pesquisa_tarefa]
+            context=[buscar_tarefa],
             expected_output='Um texto sobre {tema} para o Linkedin.'
         )
-        escrita_tarefa = Task(
-            description=(
-                'Escreva uma postagem com base no conteúdo pesquisado.'
-                ' A postagem deve ser clara, interessante e envolvente.'
+        
+        revisar_tarefa = Task(
+            description=("Revisar a postagem de LinkedIn em questão quanto a erros gramaticais"
             ),
-            expected_output='Uma postagem completa sobre {topic} com 3 parágrafos.',
-            agent=escritor,
-            llm=self.llm,
-            context=[pesquisa_tarefa]
-        )
-
-        revisao_tarefa = Task(
-            description=(
-                'Reveja a postagem criada, ajustando a clareza e corrigindo possíveis erros.'
-            ),
-            expected_output='Uma postagem revisada e otimizada.',
             agent=revisor,
+            tools=[self.search_tool],
             llm=self.llm,
-            context=[escrita_tarefa]
+            context=[escrever_tarefa],
+            expected_output='Um texto de Linkedin pronto para a publicação. O texto está separado em parágrafos e não utiliza bullet point'
         )
 
         # Criando o Crew
         return Crew(
-            agents=[pesquisador, escritor, revisor],
-            tasks=[pesquisa_tarefa, escrita_tarefa, revisao_tarefa],
+            agents=[buscador, escritor, revisor],
+            tasks=[buscar_tarefa, escrever_tarefa, revisar_tarefa],
             process=Process.sequential
         )
 

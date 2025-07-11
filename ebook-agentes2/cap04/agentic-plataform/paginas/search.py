@@ -1,13 +1,11 @@
 import streamlit as st
-from crews.post_crew import CrewPostagem  
-
+from crews.search_crew import CrewSearch
 
 def render_search_page():
 
     # Configuração do Streamlit
     st.title('Sistema de Pesquisa com CrewAI')
-
-    tema = st.text_input('Digite o tópico para pesquisar na internet', 'IA na saúde')
+    tema = st.text_input('Digite o tópico para pesquisar na internet', 'Oportunidades para Desenvolvedor de IA no Brasil')
 
 
     # Botão para iniciar o processo
@@ -15,10 +13,10 @@ def render_search_page():
         
         #Quanto clicar no botão carrega um loader
         with st.spinner('Executando tarefas do Crew...'):
-            crew_postagem = CrewPostagem()
-            result = crew_postagem.kickoff(inputs={'topic': tema})
+            crew_search = CrewSearch()
+            result = crew_search.kickoff(inputs={'topic': tema})
             st.success('Processo concluído!')
 
         # Exibindo resultados
-        st.subheader('Postagem Gerada')
+        st.subheader('Conteúdo Pesquisado')
         st.write(result)
