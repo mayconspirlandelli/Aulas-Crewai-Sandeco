@@ -10,10 +10,38 @@ class CrewPDFResumo:
 
     def __init__(self, pdf_path):
         self.llm = LLMHelper.get_llm()  # Obter instância da LLM com configuração padrão
-        self.pdf_tool = PDFSearchTool(pdf_path)  # Tool nativa do CrewAI para leitura de PDF
-        
-        
-        self.llm = "gpt-4o-mini"  # Configuração do modelo LLM        
+        #self.pdf_tool = PDFSearchTool(pdf_path)  # Tool nativa do CrewAI para leitura de PDF
+
+        self.pdf_tool = PDFSearchTool(
+            pdf_path,
+
+
+            
+            config=dict(
+                llm=dict(
+                    provider="google", # or google, openai, anthropic, llama2, ...
+                    config=dict(
+                        model="gemini/gemini-2.0-flash",
+                        temperature=0.5,
+                        api_key=os.environ.get("GOOGLE_API_KEY"),
+                        # temperature=0.5,
+                        # top_p=1,
+                        # stream=true,
+                    ),
+                ),
+                embedder=dict(
+                    provider="google", # or openai, ollama, ...
+                    config=dict(
+                        model="models/embedding-001",
+                        task_type="retrieval_document",
+                        # title="Embeddings",
+                    ),
+                ),
+            )
+        )
+
+
+
         self.crew = self._criar_crew()
 
     def _criar_crew(self):

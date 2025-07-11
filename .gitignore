@@ -1,3 +1,28 @@
+# Ignorar arquivos da pasta db/
+db/
+db/*
+
+# Ignorar arquivos específicos
+db/chroma.sqlite3
+chroma.sqlite3
+
+# Ignorar ChromaDB geral
+chroma/
+chroma.db
+chroma/*
+
+# Arquivos de banco comuns
+*.sqlite
+*.sqlite3
+
+# Arquivos temporários de split ou embedding
+*.pkl
+*.tmp
+*.cache
+
+# Se estiver usando persist_directory em alguma lib:
+persist/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
